@@ -47,10 +47,6 @@ int main() {
 
 	*barak = *yael;
 	if(*barak>*yael){cout<<"Barak's salary is higher than Yael's \n"<<endl;}
-	else
-	{
-		cout<<"Barak's salary is higher than Yael's \n"<<endl;
-	}
 
 
 	return 0;
