@@ -1,13 +1,14 @@
 
-#ifndef EMPLOYEE_H_
-#define EMPLOYEE_H_
-#include <string.h>
+#ifndef EMPLOYEE_H
+#define EMPLOYEE_H
+#include <stdlib.h>
 #include <iostream>
-
+#include <string.h>
 
 using namespace std;
 
-const int startingSalary = 0;
+extern int empCounter;
+
 
 
 class Employee {
@@ -39,7 +40,7 @@ public:
 	Employee& operator++();
 	Employee operator++( int);
 	friend  bool operator>( const Employee& l, const Employee& r);
-	inline bool operator==( const Employee& e)const ;
+	bool operator==( const Employee& e) ;
 	Employee& operator+=( const Employee& e);
 	Employee& operator=( const Employee& e);
 	friend ostream& operator<<( ostream& out, const Employee& e);

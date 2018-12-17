@@ -1,33 +1,37 @@
-#include "Employee.h"
-using namespace std;
+#define _CRT_SECURE_NO_WARNINGS
 
-int Employee::empCounter = 0;
+#include <string.h>
+#include <iostream>
+#include "Employee.h"
+
+int empCounter = 0;
 
 
 Employee::Employee() {
-	setName((char*)"Name");
-	salary = startingSalary;
+	this->name = new char[5];
+	strcpy(this->name,"Name");
+	salary = 0;
 	id = 0;
 }
 
 Employee::Employee (const char* name, int id , double salary ){
 
 	if(!name)return;
-	setName(name);
+	this->name = new char[strlen(name)+1];
+	strcpy(this->name,name);
 	this->salary=salary;
 	this->id=id;
-	empCounter++;
 }
 
 Employee::Employee (const Employee& emp){
 	id = emp.id;
 	salary = emp.salary;
-	setName(emp.name);
-	empCounter++;
+	this->name = new char[strlen(emp.name)+1];
+	strcpy(this->name,emp.name);
 }
 
 int Employee::planOfficeParty(){
-	return empCounter*10;
+	return ::empCounter * 10;
 }
 
 void Employee::print() const
@@ -45,10 +49,10 @@ bool Employee::setName( const char* nName){
 	temp = new char[strlen(nName) + 1];
 	if (!temp)
 		return false;
+	delete  name;
 	strcpy(temp, nName);
-	delete [] nName;
-    delete [] name;
 	this->name = temp;
+
 	return true;
 }
 
@@ -77,8 +81,8 @@ void Employee::promote(double raiseAmount = 100){
 }
 
 Employee::~Employee() {
-	delete [] name;
-	empCounter--;
+	if(name != NULL)
+		delete [] name;
 }
 
 Employee Employee::operator+ (const Employee& e) {
@@ -110,4 +114,4 @@ Employee& Employee::operator=(const Employee& e){
 
 ostream& operator<<(ostream& out, const Employee& e) { e.print(); return out;};
 bool operator>(const Employee& l, const Employee& r){return l.salary > r.salary;};
-inline bool Employee::operator==(const Employee& e)const {return (id == e.id);};
+bool Employee::operator==(const Employee& e) {return (id == e.id);};

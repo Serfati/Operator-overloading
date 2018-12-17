@@ -1,9 +1,13 @@
-#ifndef DATABASE_H_
-#define DATABASE_H_
-
-#include "Employee.h"
-#include <string.h>
+#ifndef DATABASE_H
+#define DATABASE_H
+#include <stdlib.h>
 #include <iostream>
+#include <string.h>
+#include "Employee.h"
+
+using namespace std;
+
+extern int num_of_emp;
 
 class DataBase {
 private:
@@ -23,7 +27,7 @@ public:
 	int getNumEmployee(); //gets the number of Employees in list
 	int getArrayLength(); //gets the actual size of the list
 
-	virtual ~DataBase();//destructor
+	~DataBase();//destructor
 };
 
 #endif /* DATABASE_H_ */

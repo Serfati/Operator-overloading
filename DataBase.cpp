@@ -1,14 +1,17 @@
-#include "Employee.h"
-#include "DataBase.h"
+#define _CRT_SECURE_NO_WARNINGS
 
-using namespace std;
+#include <string>
+#include <iostream>
+#include "DataBase.h"
 
 
 DataBase::DataBase() { // default constructor
+	empCounter=0;
 	numOfemployees = 0;
 	arrLen = 3;
 	list = new Employee*[arrLen]; // data is an array need to build array with size 3
 	if(list == NULL) return;
+
 }
 
 DataBase::DataBase ( const DataBase& DB ){//copy another database
@@ -24,16 +27,17 @@ DataBase::DataBase ( const DataBase& DB ){//copy another database
 }
 
 bool DataBase::addEmployee(Employee *theEmployee){
-
-	if( dynamic_cast <Employee*>(theEmployee) && getEmployee(theEmployee->getId()) == NULL ){ //if it does not exist already, add the employee
+	Employee** temp;
+	if( !getEmployee(theEmployee->getId())){ //if it does not exist already, add the employee
 		if (numOfemployees < arrLen) { //looks if the list is full or not
 			list[numOfemployees] = theEmployee; //adds the employee to the list
 			numOfemployees++; //increments the list
+			empCounter++;
 			return true;
 		}
 		else {// array is full
 			arrLen = arrLen * 2;            // Double the previous size.
-			Employee** temp = new Employee*[arrLen]; // Allocate new, bigger array.
+			temp = new Employee*[arrLen]; // Allocate new, bigger array.
 			if(temp == NULL) return false;
 			for (int i = 0; i< numOfemployees; i++)
 				temp[i] = list[i];       // Copy old array to new array.
@@ -41,26 +45,26 @@ bool DataBase::addEmployee(Employee *theEmployee){
 			list = temp;                 // Now a points to new array.
 			list[numOfemployees] = theEmployee; //adds the employee to the list
 			numOfemployees++; //increments the list
+			empCounter++;
 			return true;
 		}
 	}
-	else{
-		cout<<"This employee is already in the database\n"<<endl;
+	else //This employee is already in the database\n";
 		delete theEmployee;
-	}
 	return false;
 }
+
 
 bool DataBase::removeEmployee(int idToRemove){
 	Employee* E = getEmployee(idToRemove);
 	if(E != NULL ){ //if it exist, delete it, looks if the list is empty or not
-		for(int i = 0; i < arrLen; i++){
-			if(list[i]->getId() == E->getId()){
-				list[i]->~Employee();
+		for(int i = 0; i < numOfemployees; i++){
+			if(list[i]->getId() == idToRemove){
 				delete list[i];
-				for(int j = i; j < arrLen-1; j++)
-					list[j] = list[j+1]; //shifts the elements
+				for( i = 0; i < numOfemployees-1; i++)
+					list[i] = list[i+1]; //shifts the elements
 				numOfemployees--; //decrements the list
+				empCounter--;
 				return true;
 			}
 		}
@@ -70,10 +74,10 @@ bool DataBase::removeEmployee(int idToRemove){
 }
 
 Employee* DataBase::getEmployee(int employeeID){
-	for(int i = 0; i < numOfemployees; i++){
-		if(strcmp(list[i]->getName(), "Name") != 0)
-			if(list[i]->getId() == employeeID )
-				return list[i];
+	for (int i = 0; i < this->numOfemployees;i++)
+	{
+		if (list[i]->getId() == employeeID)
+			return this->list[i];
 	}
 	return NULL;
 }
@@ -82,11 +86,8 @@ void DataBase::print() const{
 	if(numOfemployees > 0){
 		cout<<"Employees database:\n"<<endl;
 		for(int i = 0; i < numOfemployees;  i++)
-			if(strcmp(list[i]->getName(), "Name") != 0)
-				list[i]->print();
+			list[i]->print();
 	}
-	else
-		cout<<"Cannot print the list of employees because it is empty."<<endl;
 
 }
 
@@ -100,10 +101,7 @@ int DataBase::getArrayLength(){ //returns the size
 
 DataBase::~DataBase() {
 	// destructor stub
-	for(int i = 0; i < arrLen; i++){
-		list[i]->~Employee();
+	for(int i = 0; i < arrLen; i++)
 		delete list[i];
-	}
-
 	delete list;
 }
